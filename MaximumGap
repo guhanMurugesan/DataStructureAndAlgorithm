@@ -1,0 +1,35 @@
+class Solution {
+    public int maximumGap(List<int> A) {
+        if(A.Count == 1 || A.Count==0)
+          return 0;
+        int[] minBucket = new int[A.Count-1];
+        int[] maxBucket = new int[A.Count - 1];
+        int max = A.Max();
+        int min = A.Min();
+        
+        minBucket = minBucket.Select(x=> x = int.MaxValue).ToArray();
+        maxBucket = maxBucket.Select(x=> x = int.MinValue).ToArray();
+        double leastGap = (double)(max-min)/(double)(A.Count-1);
+        for(int i=0;i<A.Count;i++)
+        {
+            if(A[i] == min || A[i] == max)
+               continue;
+            int index = (int)((double)Math.Floor((double)A[i]-min)/leastGap);
+            minBucket[index] = Math.Min(A[i],minBucket[index]);
+            maxBucket[index] = Math.Max(A[i],maxBucket[index]);
+        }
+        
+        var maxGap = 0;
+        int prev_Max = min;
+        for(int i=0;i<A.Count-1;i++)
+        {
+            if(minBucket[i] == int.MaxValue)
+              continue;
+            maxGap = Math.Max(maxGap,minBucket[i] - prev_Max);
+            prev_Max = maxBucket[i];
+        }
+        maxGap = Math.Max(maxGap,max - prev_Max);
+        
+        return maxGap;
+    }
+}
