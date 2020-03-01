@@ -1,0 +1,39 @@
+class Program
+{
+  static Dictionary<long, Dictionary<long, long>> map = new Dictionary<long, Dictionary<long, long>>();
+    static List<long> coins;
+    public static long getWays(int n, List<long> c)
+    {
+        for (int i = 1; i <= n; i++)
+        {
+            var temp = new Dictionary<long, long>();
+            foreach (var item in c)
+            {
+                temp.Add(item, -1);
+            }
+            map.Add(i, temp);
+        }
+        coins = c;
+        return solveWays((long)n, c.Max(x => x));
+    }
+
+    public static long solveWays(long n, long key)
+    {
+        if (n < 0)
+            return 0;
+        if (n == 0)
+            return 1;
+
+        if (map[n][key] != -1)
+            return map[n][key];
+
+        long temp = 0;
+        foreach (var item in coins)
+            if (item <= key)
+                temp += solveWays(n - item, item);
+
+        map[n][key] = temp;
+
+        return map[n][key];
+    }
+}
